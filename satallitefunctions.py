@@ -8,13 +8,13 @@ class TleReader:
 
         self.access_TLE()
 
-    # This method must be called before any method, however it only needs to be called once
+    # This method must be called before any method, however it only needs to be called once per run sequence
     def access_TLE(self):
-        max_days = 7 
+        max_days = 0.5
         name = 'gp.php'
 
         # Download again if it's been a while
-        if not load._exists(name) or load.days_old(name) >= max_days:
+        if not load.exists(name) or load.days_old(name) >= max_days:
             load.download(self.stations_url, filename=name)
             print("New TLE Downloaded")
         
@@ -100,3 +100,6 @@ class TleReader:
                 start.utc_strftime('%Y-%m-%d %H:%M'),
                 end.utc_strftime('%Y-%m-%d %H:%M')
             ))
+
+def DatabaseUpload(connection,date, epoch, sunlit, ecclipse):
+    pass

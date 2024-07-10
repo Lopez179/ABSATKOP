@@ -27,7 +27,7 @@ class TleReader:
 
     def print_epoch(self):
         epoch_object = self.satellite.epoch.utc_jpl()
-        print(epoch_object)
+        return epoch_object
 
     def print_overhead_times(self, t0, t1, cutoff_angle):
         bluffton = wgs84.latlon(+53.527413, -113.530055)
@@ -35,9 +35,13 @@ class TleReader:
         t, events = self.satellite.find_events(bluffton, t0, t1, altitude_degrees=cutoff_angle)
         event_names = 'rise above ' + str(cutoff_angle) + ' °', 'culminate', 'set below ' + str(cutoff_angle) + ' °'
 
+        instance_list = []
+
         for ti, event in zip(t, events):
             name = event_names[event]
-            print(ti.utc_strftime('%Y %b %d %H:%M:%S'), name)
+            instance_list.append((ti.utc_strftime('%Y %b %d %H:%M:%S') + " " + name))
+        
+        return instance_list
 
     def print_sunlit_ranges(self, utc_timerange):
         eph = load('de421.bsp')
@@ -63,11 +67,14 @@ class TleReader:
             sunlit_endings.append(utc_timerange[-1])
         # this edge case only exists on the end, because we assume not sunlit before the beginning of the time window
 
+        instance_list = []
         for start, end in zip(sunlit_beginnings, sunlit_endings):
-            print('{} - {}'.format(
+            instance = ('{} - {}'.format(
                 start.utc_strftime('%Y-%m-%d %H:%M'),
                 end.utc_strftime('%Y-%m-%d %H:%M')
             ))
+            instance_list.append(instance)
+        return instance_list
 
     def print_ecclipse_ranges(self, utc_timerange):
         eph = load('de421.bsp')
@@ -95,11 +102,15 @@ class TleReader:
             eclipse_endings.append(utc_timerange[-1])
         # this edge case only exists on the end, because we assume not sunlit before the beginning of the time window
 
+        instance_list = []
         for start, end in zip(eclipse_beginnings, eclipse_endings):
-            print('{} - {}'.format(
+            instance = ('{} - {}'.format(
                 start.utc_strftime('%Y-%m-%d %H:%M'),
                 end.utc_strftime('%Y-%m-%d %H:%M')
             ))
+            instance_list.append(instance)
+        
+        return instance_list
 
 def DatabaseUpload(connection,date, epoch, sunlit, ecclipse):
     pass

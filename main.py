@@ -41,6 +41,7 @@ for i in ecclipsetimes:
 
 # Load into database ---------------------------------------------------------------------------------
 
+
 mainCursor.execute("INSERT INTO TimeRecord (date, epoch, overhead, timerange_sunlit) VALUES (?, ?, ?,?)", (str(today), str(epoch_obj), str(overheadtimes), str(sunlittimes)))
 connection.commit()
 connection.close()
